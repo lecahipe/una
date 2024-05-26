@@ -27,3 +27,12 @@ class UserDeviceMetabolicData(models.Model):
     insulin_change_by_user_units = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     creation_timestamp = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['glucose_value_history']),
+            models.Index(fields=['user_id']),
+        ]
+
+        
+    def __str__(self):
+        return f"Metabolic Data for User {self.user_id} at {self.creation_timestamp}"
