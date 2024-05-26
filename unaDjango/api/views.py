@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from api import serializers
 from api.filters import UserDeviceMetabolicDataDatesFilter
 from data.models import UserDeviceMetabolicData
+from api.utils import ExportClass
 
 
 class UserDeviceGlucoseDataView(viewsets.ReadOnlyModelViewSet):
@@ -60,3 +61,23 @@ class CSVUploadView(views.APIView):
             return Response({'status': 'success'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
+class ExportDataView(views.APIView, ExportClass):
+    '''
+        Export data in either CSV or JSON format
+    '''
+    def get(self, request, *args, **kwargs):
+        serializer = serializers.ExportDataRequestSerializer(data=request.query_params)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        queryset = UserDeviceMetabolicData.objects.all()
+        data = serializers.UserDeviceMetabolicDataSerializer(queryset, many=True).data
+
+        filetype = serializer.validated_data['filetype'].lower()
+        if filetype == 'csv':
+            return self.export_csv(data)
+        elif filetype == 'json':
+            return self.export_json(data)
+        else:
+            return Response({"error": "Invalid filetype"}, status=status.HTTP_400_BAD_REQUEST)
