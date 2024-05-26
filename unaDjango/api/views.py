@@ -19,6 +19,13 @@ class UserDeviceGlucoseDataView(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'user_id'
     filterset_class = UserDeviceMetabolicDataDatesFilter
     ordering_fields = ['device_timestamp']
+    filterset_fields = ['user_id']
+    
+    def retrieve(self, request, *args, **kwargs):
+        user_id = self.kwargs.get('user_id')
+        queryset = self.filter_queryset(self.get_queryset().filter(user_id=user_id))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
     
 
 class CSVUploadView(views.APIView):
