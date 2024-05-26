@@ -1,3 +1,9 @@
 from django.contrib import admin
+from data.models import UserDeviceMetabolicData
 
-# Register your models here.
+
+class UserDeviceMetabolicDataAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(UserDeviceMetabolicData, UserDeviceMetabolicDataAdmin)
