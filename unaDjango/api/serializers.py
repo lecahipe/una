@@ -9,3 +9,10 @@ class UserDeviceMetabolicDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDeviceMetabolicData
         fields = '__all__'
+
+
+class CSVUploadSerializer(serializers.Serializer):
+    '''
+        Serialize the CSV file
+    '''
+    file = serializers.FileField()

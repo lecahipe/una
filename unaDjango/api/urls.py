@@ -7,4 +7,5 @@ router.register(r'levels', views.UserDeviceGlucoseDataView)
 
 urlpatterns = [
     path('v1/', include(router.urls)),
+    path('upload-csv/', views.CSVUploadView.as_view(), name='upload-csv'),
 ]
